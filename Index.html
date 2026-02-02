@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Harman, Will You Be My Valentine?</title>
+
+    <style>
+        body {
+            background: linear-gradient(to bottom right, #ffb6c1, #ffc0cb);
+            text-align: center;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        h1 {
+            margin-top: 20vh;
+            font-size: 8vw;
+            color: #d1006c;
+            padding: 0 10px;
+        }
+
+        .button-container {
+            position: relative;
+            margin-top: 30px;
+        }
+
+        button {
+            font-size: 5vw;
+            padding: 12px 20px;
+            margin: 10px;
+            border-radius: 15px;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        #yesBtn {
+            background-color: red;
+            color: white;
+            position: relative;
+            z-index: 2;
+        }
+
+        #noBtn {
+            background-color: white;
+            color: black;
+            position: absolute;
+        }
+
+        .flowers {
+            position: fixed;
+            bottom: 10px;
+            width: 100%;
+            font-size: 6vw;
+        }
+
+        /* Floating hearts */
+        .heart {
+            position: fixed;
+            top: -10px;
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(110vh);
+            }
+        }
+
+        /* Confetti */
+        .confetti {
+            position: fixed;
+            width: 8px;
+            height: 8px;
+            top: 0;
+            animation: confettiFall linear forwards;
+        }
+
+        @keyframes confettiFall {
+            to {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <audio id="bgMusic" loop>
+        <source src="https://www.bensound.com/bensound-music/bensound-romantic.mp3" type="audio/mpeg">
+    </audio>
+
+    <h1>Harman, Will You Be My Valentine? 🌸</h1>
+
+    <div class="button-container">
+        <button id="yesBtn">Yes 💖</button>
+        <button id="noBtn">No 😢</button>
+    </div>
+
+    <div class="flowers">🌹 🌷 🌸 🌺 🌹 🌷 🌸</div>
+
+    <script>
+        const noBtn = document.getElementById("noBtn");
+        const yesBtn = document.getElementById("yesBtn");
+        const music = document.getElementById("bgMusic");
+
+        let yesSize = 1;
+
+        // Start music on first tap (mobile safe)
+        document.body.addEventListener("click", () => {
+            music.play().catch(() => {});
+        }, { once: true });
+
+        function moveButton() {
+            const maxX = window.innerWidth - noBtn.offsetWidth;
+            const maxY = window.innerHeight - noBtn.offsetHeight;
+
+            const x = Math.random() * maxX;
+            const y = Math.random() * maxY;
+
+            noBtn.style.left = x + "px";
+            noBtn.style.top = y + "px";
+
+            yesSize += 0.15;
+            yesBtn.style.transform = `scale(${yesSize})`;
+        }
+
+        noBtn.addEventListener("touchstart", moveButton);
+        noBtn.addEventListener("mouseover", moveButton);
+        noBtn.addEventListener("click", moveButton);
+
+        yesBtn.addEventListener("click", function() {
+            launchConfetti();
+            document.body.innerHTML += `
+                <h1 style="margin-top:20vh;font-size:9vw;color:#d1006c;">
+                YAY ❤️🥰<br>
+                I LOVE YOU SO MUCH HARMAN 🌹💖
+                </h1>
+            `;
+        });
+
+        // Floating hearts
+        function createHeart() {
+            const heart = document.createElement("div");
+            heart.classList.add("heart");
+            heart.innerHTML = "💖";
+            heart.style.left = Math.random() * 100 + "vw";
+            heart.style.animationDuration = (Math.random() * 3 + 3) + "s";
+            heart.style.fontSize = (Math.random() * 5 + 5) + "vw";
+            document.body.appendChild(heart);
+
+            setTimeout(() => heart.remove(), 6000);
+        }
+
+        setInterval(createHeart, 400);
+
+        // Confetti
+        function launchConfetti() {
+            for (let i = 0; i < 120; i++) {
+                const confetti = document.createElement("div");
+                confetti.classList.add("confetti");
+                confetti.style.left = Math.random() * 100 + "vw";
+                confetti.style.backgroundColor =
+                    `hsl(${Math.random() * 360}, 100%, 50%)`;
+                confetti.style.animationDuration =
+                    (Math.random() * 2 + 2) + "s";
+                document.body.appendChild(confetti);
+
+                setTimeout(() => confetti.remove(), 4000);
+            }
+        }
+    </script>
+
+</body>
+</html>
